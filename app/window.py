@@ -62,16 +62,16 @@ class Window(QOpenGLWidget):
 
     # Interface
     def init(self):
-        print('init')
+        logger.info('init')
 
     def size(self, w, h):
-        print('self', w, h)
+        logger.info(f'self {w}, {h}')
 
     def draw(self, dt):
-        print('draw', dt)
+        logger.info(f'draw {dt:.4f}')
 
     def exit(self):
-        print('exit')
+        logger.info('exit')
 
 if __name__ == '__main__':
     Window.run()

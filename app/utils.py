@@ -10,6 +10,6 @@ handler = logging.StreamHandler()
 
 format = '%(asctime)s - %(levelname)s - %(filename)s - %(message)s'
 formatter = logging.Formatter(format)
-handler.selfFormatter(formatter)
+handler.setFormatter(formatter)
 
 logger.addHandler(handler)
