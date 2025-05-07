@@ -1,3 +1,2 @@
 window:
-	. venv/bin/acivate && python app/window.py
-	
+	venv\Scripts\Activate.bat && python app/window.py
