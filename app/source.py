@@ -11,14 +11,14 @@ from utils import logger
 class Source:
     
     def __init__(self, *args, **kwargs):
-        self.audio = pyaudio.PyAudio
+        self.audio = pyaudio.PyAudio()
         self.complete = False
         self.data = []
         self.index = 0
         self.total = 0
         self.init(*args, **kwargs)
     
-    def init(*args, **Kwargs):
+    def init(self, *args, **Kwargs):
         raise NotImplementedError('source.init')
     
     def callback(self, data, frame_count, time_info, status):
@@ -42,11 +42,12 @@ class File(Source):
             output=True,
             frames_per_buffer=BUFFER_SIZE,
             stream_callback=self.callback)
+        self.stream.start_stream()
     
     def callback(self, data, frame_count, time_info, status):
         a = self.total
         b = self.total + BUFFER_SIZE
-        data = self.data(a:b)
+        data = self.data[a:b]
         self.total = b
         if self.total >= len(self.data):
             self.complete = True
@@ -60,4 +61,8 @@ class Microphone(Source):
 
 
 if __name__ == '__main__':
-    filename = ''
+    filename = './audio/gettysburg.wav'
+
+    source = File(filename)
+
+    time.sleep(5)

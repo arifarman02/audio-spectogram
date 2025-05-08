@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import QApplication, QOpenGLWidget, QShortcut
 
 from utils import logger
 
+
+
 class Window(QOpenGLWidget):
 
     frame_rate = 61
