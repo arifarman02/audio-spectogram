@@ -36,7 +36,7 @@ class Window(QOpenGLWidget):
     # OpenGL Logic
     def initializeGL(self):
         self.ctx = moderngl.create_context(require=330)
-        self.ctx.clear(0.2, 0.6, 0.5)
+        self.ctx.clear(0.0, 0.0, 0.0)
         self.ctx.multisample = True
         self.init()
 

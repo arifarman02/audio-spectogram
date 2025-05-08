@@ -8,6 +8,11 @@ from utils import logger
 
 
 
+WINDOW_SIZE = 1024
+HOP_SIZE = 370
+
+
+
 class Source:
     
     def __init__(self, *args, **kwargs):
@@ -18,13 +23,26 @@ class Source:
         self.total = 0
         self.init(*args, **kwargs)
     
-    def init(self, *args, **Kwargs):
+    def init(self, *args, **kwargs):
         raise NotImplementedError('source.init')
     
     def callback(self, data, frame_count, time_info, status):
         raise NotImplementedError('source.callback')
     
-
+    def get(self):
+        if self.index + WINDOW_SIZE > self.total:
+            return None
+        a = self.index
+        b = self.index + WINDOW_SIZE
+        data = self.data[a:b]
+        self.index = a + HOP_SIZE
+        return np.array(data)
+    
+    def available(self):
+        samples = self.total -self.index
+        samples -= WINDOW_SIZE
+        available = math.ceil(samples / HOP_SIZE)
+        return max(0, available)
 
 SAMPLE_RATE = 22050
 BUFFER_SIZE = 1024
@@ -44,7 +62,7 @@ class File(Source):
             stream_callback=self.callback)
         self.stream.start_stream()
     
-    def callback(self, data, frame_count, time_info, status):
+    def callback(self, in_data, frame_count, time_info, status):
         a = self.total
         b = self.total + BUFFER_SIZE
         data = self.data[a:b]
