@@ -1,3 +1,4 @@
+import config
 import librosa
 import math
 import numpy as np
@@ -8,8 +9,6 @@ from utils import logger
 
 
 
-WINDOW_SIZE = 1024
-HOP_SIZE = 370
 
 
 
@@ -30,41 +29,39 @@ class Source:
         raise NotImplementedError('source.callback')
     
     def get(self):
-        if self.index + WINDOW_SIZE > self.total:
+        if self.index + config.WINDOW_SIZE > self.total:
             return None
         a = self.index
-        b = self.index + WINDOW_SIZE
+        b = self.index + config.WINDOW_SIZE
         data = self.data[a:b]
-        self.index = a + HOP_SIZE
+        self.index = a + config.HOP_SIZE
         return np.array(data)
     
     def available(self):
         samples = self.total -self.index
-        samples -= WINDOW_SIZE
-        available = math.ceil(samples / HOP_SIZE)
+        samples -= config.WINDOW_SIZE
+        available = math.ceil(samples / config.HOP_SIZE)
         return max(0, available)
 
-SAMPLE_RATE = 22050
-BUFFER_SIZE = 1024
 
 
 
 class File(Source):
     
     def init(self, filename):
-        self.data, _ = librosa.load(filename, sr=SAMPLE_RATE)
+        self.data, _ = librosa.load(filename, sr=config.SAMPLE_RATE)
         self.stream = self.audio.open(
             format=pyaudio.paFloat32,
             channels=1,
-            rate=SAMPLE_RATE,
+            rate=config.SAMPLE_RATE,
             output=True,
-            frames_per_buffer=BUFFER_SIZE,
+            frames_per_buffer=config.BUFFER_SIZE,
             stream_callback=self.callback)
         self.stream.start_stream()
     
     def callback(self, in_data, frame_count, time_info, status):
         a = self.total
-        b = self.total + BUFFER_SIZE
+        b = self.total + config.BUFFER_SIZE
         data = self.data[a:b]
         self.total = b
         if self.total >= len(self.data):
@@ -74,7 +71,22 @@ class File(Source):
 
 
 class Microphone(Source):
-    pass
+    
+    def init(self):
+        self.stream = self.audio.open(
+            format=pyaudio.paFloat32,
+            channels=1,
+            rate=config.SAMPLE_RATE,
+            input=True,
+            frames_per_buffer=config.BUFFER_SIZE,
+            stream_callback=self.callback)
+        
+    def callback(self, data, frame_count, time_info, status):
+        data = np.frombuffer(data, dtype=np.float32)
+        data = data.tolist()
+        self.data.extend(data)
+        self.total = len(self.data)
+        return None, pyaudio.paContinue
 
 
 

@@ -1,4 +1,6 @@
-from source import File
+import config
+
+from source import File, Microphone
 from wave import Wave
 from window import Window
 
@@ -7,9 +9,10 @@ from window import Window
 class App(Window):
 
     def init(self):
-       self.source = File('audio/gettysburg.wav')
+       #self.source = File('audio/gettysburg.wav')
+       self.source = Microphone()
 
-       self.wave = Wave(self.ctx, 0, 0, 1200, 720)
+       self.wave = Wave(self.ctx, 0, 0, config.WINDOW_WIDTH, config.WINDOW_HEIGHT)
 
     def size(self, w, h):
         self.wave.size(w, h)
