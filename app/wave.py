@@ -1,10 +1,6 @@
 import moderngl
 import numpy as np
-from pyrr import Matrix44
-
-def orthographic(w, h):
-    return Matrix44.orthogonal_projection(
-        0, w, h, 0, 1, -1, dtype='f4')
+from utils import orthographic
 
 
 

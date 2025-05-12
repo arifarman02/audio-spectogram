@@ -1,4 +1,5 @@
 import logging
+from pyrr import Matrix44
 
 
 # Logger
@@ -13,3 +14,9 @@ formatter = logging.Formatter(format)
 handler.setFormatter(formatter)
 
 logger.addHandler(handler)
+
+
+
+def orthographic(w, h):
+    return Matrix44.orthogonal_projection(
+        0, w, h, 0, 1, -1, dtype='f4')
