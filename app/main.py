@@ -14,7 +14,7 @@ class App(Window):
        self.source = Microphone()
 
        self.wave = Wave(self.ctx, 0, 0, config.WINDOW_WIDTH, 200)
-       self.spec = Spec(self.ctx, 0, self.wave.h, config.WINDOW_HEIGHT, 460)
+       self.spec = Spec(self.ctx, 0, self.wave.h, config.WINDOW_WIDTH, 460)
 
     def size(self, w, h):
         self.wave.size(w, h)

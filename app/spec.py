@@ -70,11 +70,12 @@ class Spec:
         
         vertices = np.array([
             0, y, 0, 1, #A
-            0, y+h, 0, 0, #A
-            w, y+h, 1, 0, #A
+            0, y+h, 0, 0, #B
+            w, y+h, 1, 0, #C
+            
             0, y, 0, 1, #A
-            0, y+h, 1, 0, #A
-            0, y, 1, 0, #A
+            w, y+h, 1, 0, #B
+            w, y, 1, 1, #C
         ])
 
         vertices = vertices.astype('f4')
@@ -85,7 +86,7 @@ class Spec:
         self.frame = np.zeros((513, self.w, 3), dtype='u1')
 
         self.texture = self.ctx.texture(
-                        size=(513, self.w),
+                        size=(self.w, 513),
                         components=3,
                         data=self.frame)
         self.texture.repeat_x = False
