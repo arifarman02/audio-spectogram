@@ -21,7 +21,7 @@ def stft_slice(window):
     tapered = window * hann
     return np.fft.rfft(tapered)
 
-def stft_color(slice, min_db=-50, max_db=30):
+def stft_color(slice, min_db=-30, max_db=30):
     slice = np.abs(slice)
     slice = librosa.amplitude_to_db(slice)
     slice = slice.clip(min_db, max_db)
@@ -72,7 +72,7 @@ class Spec:
             0, y, 0, 1, #A
             0, y+h, 0, 0, #B
             w, y+h, 1, 0, #C
-            
+
             0, y, 0, 1, #A
             w, y+h, 1, 0, #B
             w, y, 1, 1, #C

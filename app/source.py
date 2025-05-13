@@ -42,6 +42,10 @@ class Source:
         samples -= config.WINDOW_SIZE
         available = math.ceil(samples / config.HOP_SIZE)
         return max(0, available)
+    
+    def release(self):
+        self.stream.close()
+        self.audio.terminate()
 
 
 
