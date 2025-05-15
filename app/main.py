@@ -16,26 +16,30 @@ class App(Window):
        
        self.source = Microphone()
 
+       self.nodes = []
+
        self.wave = Wave(self.ctx, 0, 0, config.WINDOW_WIDTH, 200)
+       self.nodes.append(self.wave)
+
        self.spec = Spec(self.ctx, 0, self.wave.h, config.WINDOW_WIDTH, 460)
+       self.nodes.append(self.spec)
 
 
        bg_color = (0.06, 0.06, 0.07, 1)
 
        # Time axis background colour
-       self.r1 = Rect(self.ctx, 0, 660, config.WINDOW_WIDTH, 70, bg_color)
+       self.nodes.append(Rect(self.ctx, 0, 660, config.WINDOW_WIDTH, 70, bg_color))
 
        # Frequency axis background colour
-       self.r2 = Rect(self.ctx, 0, 0, 80, config.WINDOW_HEIGHT, bg_color)
+       self.nodes.append(Rect(self.ctx, 0, 0, 80, config.WINDOW_HEIGHT, bg_color))
 
 
     def size(self, w, h):
         logger.info(f'size {w} {h}')
-        self.wave.size(w, h)
-        self.spec.size(w, h)
-        self.r1.size(w, h)
-        self.r2.size(w, h)
 
+        for node in self.nodes:
+            node.size(w, h)
+    
     def draw(self, dt):
         available = self.source.available()
         window = self.source.get()
@@ -48,11 +52,8 @@ class App(Window):
         self.wave.update()
         self.spec.update()
 
-        self.wave.draw()
-        self.spec.draw()
-
-        self.r1.draw()
-        self.r2.draw()
+        for node in self.nodes:
+            node.draw()
     
     def exit(self):
         logger.info('exit')
